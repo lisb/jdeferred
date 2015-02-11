@@ -67,14 +67,33 @@ public class DeferredPromise<D, F, P> implements Promise<D, F, P> {
 		return promise.then(doneCallback, failCallback, progressCallback);
 	}
 
-	public <D_OUT, F_OUT, P_OUT> Promise<D_OUT, F_OUT, P_OUT> then(
+	public <D_OUT> Promise<D_OUT, F, P> then(
 			DoneFilter<D, D_OUT> doneFilter) {
 		return promise.then(doneFilter);
 	}
 
-	public <D_OUT, F_OUT, P_OUT> Promise<D_OUT, F_OUT, P_OUT> then(
+	public <D_OUT, F_OUT> Promise<D_OUT, F_OUT, P> then(
 			DoneFilter<D, D_OUT> doneFilter, FailFilter<F, F_OUT> failFilter) {
 		return promise.then(doneFilter, failFilter);
+	}
+	
+	@Override
+	public <F_OUT> Promise<D, F_OUT, P> then(
+			FailFilter<F, F_OUT> failFilter) {
+		return promise.then(failFilter);
+	}
+	
+	@Override
+	public <P_OUT> Promise<D, F, P_OUT> then(
+			ProgressFilter<P, P_OUT> progressFilter) {
+		return promise.then(progressFilter);
+	}
+	
+	@Override
+	public <F_OUT, P_OUT> Promise<D, F_OUT, P_OUT> then(
+			FailFilter<F, F_OUT> failFilter,
+			ProgressFilter<P, P_OUT> progressFilter) {
+		return promise.then(failFilter, progressFilter);
 	}
 
 	public <D_OUT, F_OUT, P_OUT> Promise<D_OUT, F_OUT, P_OUT> then(
@@ -111,16 +130,35 @@ public class DeferredPromise<D, F, P> implements Promise<D, F, P> {
 	}
 
 	@Override
-	public <D_OUT, F_OUT, P_OUT> Promise<D_OUT, F_OUT, P_OUT> then(
-			DonePipe<D, D_OUT, F_OUT, P_OUT> doneFilter) {
+	public <D_OUT> Promise<D_OUT, F, P> then(
+			DonePipe<D, D_OUT, F, P> doneFilter) {
 		return promise.then(doneFilter);
 	}
 
 	@Override
-	public <D_OUT, F_OUT, P_OUT> Promise<D_OUT, F_OUT, P_OUT> then(
-			DonePipe<D, D_OUT, F_OUT, P_OUT> doneFilter,
-			FailPipe<F, D_OUT, F_OUT, P_OUT> failFilter) {
+	public <D_OUT, F_OUT> Promise<D_OUT, F_OUT, P> then(
+			DonePipe<D, D_OUT, F_OUT, P> doneFilter,
+			FailPipe<F, D_OUT, F_OUT, P> failFilter) {
 		return promise.then(doneFilter, failFilter);
+	}
+	
+	@Override
+	public <F_OUT> Promise<D, F_OUT, P> then(
+			FailPipe<F, D, F_OUT, P> failPipe) {
+		return promise.then(failPipe);
+	}
+	
+	@Override
+	public <P_OUT> Promise<D, F, P_OUT> then(
+			ProgressPipe<P, D, F, P_OUT> progressPipe) {
+		return promise.then(progressPipe);
+	}
+	
+	@Override
+	public <F_OUT, P_OUT> Promise<D, F_OUT, P_OUT> then(
+			FailPipe<F, D, F_OUT, P_OUT> failPipe,
+			ProgressPipe<P, D, F_OUT, P_OUT> progressPipe) {
+		return promise.then(failPipe, progressPipe);
 	}
 
 	@Override

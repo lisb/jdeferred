@@ -129,7 +129,7 @@ public interface Promise<D, F, P> {
 	 * @param doneFilter
 	 * @return
 	 */
-	public <D_OUT, F_OUT, P_OUT> Promise<D_OUT, F_OUT, P_OUT> then(
+	public <D_OUT> Promise<D_OUT, F, P> then(
 			DoneFilter<D, D_OUT> doneFilter);
 
 	/**
@@ -139,9 +139,39 @@ public interface Promise<D, F, P> {
 	 * @param failFilter
 	 * @return
 	 */
-	public <D_OUT, F_OUT, P_OUT> Promise<D_OUT, F_OUT, P_OUT> then(
+	public <D_OUT, F_OUT> Promise<D_OUT, F_OUT, P> then(
 			DoneFilter<D, D_OUT> doneFilter, FailFilter<F, F_OUT> failFilter);
+	
+	/**
+	 * Equivalent to then(null, failFilter, null)
+	 * @see {@link #then(DoneFilter, FailFilter, ProgressFilter)}
+	 * @param doneFilter
+	 * @param failFilter
+	 * @return
+	 */
+	public <F_OUT> Promise<D, F_OUT, P> then(
+			FailFilter<F, F_OUT> failFilter);
 
+	/**
+	 * Equivalent to then(null, null, progressFilter)
+	 * @see {@link #then(DoneFilter, FailFilter, ProgressFilter)}
+	 * @param doneFilter
+	 * @param failFilter
+	 * @return
+	 */
+	public <P_OUT> Promise<D, F, P_OUT> then(
+			ProgressFilter<P, P_OUT> progressFilter);
+	
+	/**
+	 * Equivalent to then(null, failFilter, progressFilter)
+	 * @see {@link #then(DoneFilter, FailFilter, ProgressFilter)}
+	 * @param doneFilter
+	 * @param failFilter
+	 * @return
+	 */
+	public <F_OUT, P_OUT> Promise<D, F_OUT, P_OUT> then(
+			FailFilter<F, F_OUT> failFilter, ProgressFilter<P, P_OUT> progressFilter);
+	
 	/**
 	 * If any of the filter is not specified, a default No Op filter would be used.
 	 * This is also known as "piping", or "chaining" of callbacks and being able to modify the return value.
@@ -181,8 +211,8 @@ public interface Promise<D, F, P> {
 	 * @param donePipe
 	 * @return
 	 */
-	public <D_OUT, F_OUT, P_OUT> Promise<D_OUT, F_OUT, P_OUT> then(
-			DonePipe<D, D_OUT, F_OUT, P_OUT> donePipe);
+	public <D_OUT> Promise<D_OUT, F, P> then(
+			DonePipe<D, D_OUT, F, P> donePipe);
 	
 	/**
 	 * Equivalent to then(DonePipe, FailPipe, null)
@@ -191,8 +221,36 @@ public interface Promise<D, F, P> {
 	 * @param failPipe
 	 * @return
 	 */
-	public <D_OUT, F_OUT, P_OUT> Promise<D_OUT, F_OUT, P_OUT> then(
-			DonePipe<D, D_OUT, F_OUT, P_OUT> donePipe, FailPipe<F, D_OUT, F_OUT, P_OUT> failPipe);
+	public <D_OUT, F_OUT> Promise<D_OUT, F_OUT, P> then(
+			DonePipe<D, D_OUT, F_OUT, P> donePipe, FailPipe<F, D_OUT, F_OUT, P> failPipe);
+	
+	/**
+	 * Equivalent to then(null, FailPipe, null)
+	 * 
+	 * @param failPipe
+	 * @return
+	 */
+	public <F_OUT> Promise<D, F_OUT, P> then(
+			FailPipe<F, D, F_OUT, P> failPipe);
+	
+	/**
+	 * Equivalent to then(null, null, ProgressPipe)
+	 * 
+	 * @param progressPipe
+	 * @return
+	 */
+	public <P_OUT> Promise<D, F, P_OUT> then(
+			ProgressPipe<P, D, F, P_OUT> progressPipe);
+	
+	/**
+	 * Equivalent to then(DonePipe, FailPipe, ProgressPipe)
+	 * 
+	 * @param failPipe
+	 * @param progressPipe
+	 * @return
+	 */
+	public <F_OUT, P_OUT> Promise<D, F_OUT, P_OUT> then(
+			FailPipe<F, D, F_OUT, P_OUT> failPipe, ProgressPipe<P, D, F_OUT, P_OUT> progressPipe);
 	
 	/**
 	 * This method is similar to JQuery's pipe() method, where a new {@link Promise} is returned

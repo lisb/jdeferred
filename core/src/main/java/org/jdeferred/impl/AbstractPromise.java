@@ -171,15 +171,34 @@ public abstract class AbstractPromise<D, F, P> implements Promise<D, F, P> {
 	}
 	
 	@Override
-	public <D_OUT, F_OUT, P_OUT> Promise<D_OUT, F_OUT, P_OUT> then(
+	public <D_OUT> Promise<D_OUT, F, P> then(
 			DoneFilter<D, D_OUT> doneFilter) {
-		return new FilteredPromise<D, F, P, D_OUT, F_OUT, P_OUT>(this, doneFilter, null, null);
+		return new FilteredPromise<D, F, P, D_OUT, F, P>(this, doneFilter, null, null);
 	}
 	
 	@Override
-	public <D_OUT, F_OUT, P_OUT> Promise<D_OUT, F_OUT, P_OUT> then(
+	public <D_OUT, F_OUT> Promise<D_OUT, F_OUT, P> then(
 			DoneFilter<D, D_OUT> doneFilter, FailFilter<F, F_OUT> failFilter) {
-		return new FilteredPromise<D, F, P, D_OUT, F_OUT, P_OUT>(this, doneFilter, failFilter, null);
+		return new FilteredPromise<D, F, P, D_OUT, F_OUT, P>(this, doneFilter, failFilter, null);
+	}
+	
+	@Override
+	public <F_OUT> Promise<D, F_OUT, P> then(
+			FailFilter<F, F_OUT> failFilter) {
+		return new FilteredPromise<D, F, P, D, F_OUT, P>(this, null, failFilter, null);
+	}
+	
+	@Override
+	public <P_OUT> Promise<D, F, P_OUT> then(
+			ProgressFilter<P, P_OUT> progressFilter) {
+		return new FilteredPromise<D, F, P, D, F, P_OUT>(this, null, null, progressFilter);
+	}
+	
+	@Override
+	public <F_OUT, P_OUT> Promise<D, F_OUT, P_OUT> then(
+			FailFilter<F, F_OUT> failFilter,
+			ProgressFilter<P, P_OUT> progressFilter) {
+		return new FilteredPromise<D, F, P, D, F_OUT, P_OUT>(this, null, failFilter, progressFilter);
 	}
 	
 	@Override
@@ -190,16 +209,34 @@ public abstract class AbstractPromise<D, F, P> implements Promise<D, F, P> {
 	}
 	
 	@Override
-	public <D_OUT, F_OUT, P_OUT> Promise<D_OUT, F_OUT, P_OUT> then(
-			DonePipe<D, D_OUT, F_OUT, P_OUT> doneFilter) {
-		return new PipedPromise<D, F, P, D_OUT, F_OUT, P_OUT>(this, doneFilter, null, null);
+	public <D_OUT> Promise<D_OUT, F, P> then(
+			DonePipe<D, D_OUT, F, P> doneFilter) {
+		return new PipedPromise<D, F, P, D_OUT, F, P>(this, doneFilter, null, null);
 	}
 
 	@Override
-	public <D_OUT, F_OUT, P_OUT> Promise<D_OUT, F_OUT, P_OUT> then(
-			DonePipe<D, D_OUT, F_OUT, P_OUT> doneFilter,
-			FailPipe<F, D_OUT, F_OUT, P_OUT> failFilter) {
-		return new PipedPromise<D, F, P, D_OUT, F_OUT, P_OUT>(this, doneFilter, failFilter, null);
+	public <D_OUT, F_OUT> Promise<D_OUT, F_OUT, P> then(
+			DonePipe<D, D_OUT, F_OUT, P> doneFilter,
+			FailPipe<F, D_OUT, F_OUT, P> failFilter) {
+		return new PipedPromise<D, F, P, D_OUT, F_OUT, P>(this, doneFilter, failFilter, null);
+	}
+	
+	@Override
+	public <F_OUT> Promise<D, F_OUT, P> then(FailPipe<F, D, F_OUT, P> failPipe) {
+		return new PipedPromise<D, F, P, D, F_OUT, P>(this, null, failPipe, null);
+	}
+	
+	@Override
+	public <P_OUT> Promise<D, F, P_OUT> then(
+			ProgressPipe<P, D, F, P_OUT> progressPipe) {
+		return new PipedPromise<D, F, P, D, F, P_OUT>(this, null, null, progressPipe);
+	}
+	
+	@Override
+	public <F_OUT, P_OUT> Promise<D, F_OUT, P_OUT> then(
+			FailPipe<F, D, F_OUT, P_OUT> failPipe,
+			ProgressPipe<P, D, F_OUT, P_OUT> progressPipe) {
+		return new PipedPromise<D, F, P, D, F_OUT, P_OUT>(this, null, failPipe, progressPipe);
 	}
 
 	@Override

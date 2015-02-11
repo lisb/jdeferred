@@ -20,6 +20,7 @@ import java.util.concurrent.Callable;
 import org.jdeferred.DoneCallback;
 import org.jdeferred.DonePipe;
 import org.jdeferred.FailCallback;
+import org.jdeferred.FailFilter;
 import org.jdeferred.FailPipe;
 import org.jdeferred.Promise;
 import org.junit.Test;
@@ -36,11 +37,11 @@ public class PipedPromiseTest extends AbstractDeferredTest {
 			}
 		};
 		
-		deferredManager.when(task).then(new DonePipe<Integer, Integer, Void, Void>() {
+		deferredManager.when(task).then(new DonePipe<Integer, Integer, Throwable, Void>() {
 			@Override
-			public Promise<Integer, Void, Void> pipeDone(Integer result) {
+			public Promise<Integer, Throwable, Void> pipeDone(Integer result) {
 				preRewireValue.set(result);
-				return new DeferredObject<Integer, Void, Void>().resolve(1000);
+				return new DeferredObject<Integer, Throwable, Void>().resolve(1000);
 			}
 		}).done(new DoneCallback<Integer>() {
 			@Override
@@ -125,6 +126,11 @@ public class PipedPromiseTest extends AbstractDeferredTest {
 		deferredManager.when(new Callable<Integer>() {
 			public Integer call() {
 				return 10;
+			}
+		}).then(new FilteredPromise.NoOpDoneFilter<Integer>(), new FailFilter<Throwable, String>() {
+			@Override
+			public String filterFail(Throwable result) {
+				return null;
 			}
 		}).then(new DonePipe<Integer, Integer, String, Void>() {
 			@Override
